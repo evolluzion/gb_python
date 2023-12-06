@@ -46,7 +46,7 @@ def get_info():
             else:
                 is_valid_phone = True
         except ValueError:
-            print("Не валидный номер!!!")
+            print("Не валидный номер")
             continue
         except LenNumberError as err:
             print(err)
@@ -99,6 +99,6 @@ def main():
             if not exists(file_name):
                 print("Файл отсутствует. Создайте его")
                 continue
-    print(*read_file(file_name))
+            print(*read_file(file_name), sep='\n')
 
 main()
