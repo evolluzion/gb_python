@@ -18,7 +18,7 @@ def get_info():
         try:
             first_name = input("Введите имя: ")
             if len(first_name) < 2:
-                raise NameError("Неверное имя")
+                raise NameError("Ошибка ввода имени!")
             else:
                 is_valid_first_name = True
         except NameError as err:
@@ -30,7 +30,7 @@ def get_info():
         try:
             last_name = input("Введите фамилию: ")
             if len(last_name) < 2:
-                raise NameError("Неверная фамилия")
+                raise NameError("Ошибка ввода фамилии!")
             else:
                 is_valid_last_name = True
         except NameError as err:
@@ -42,11 +42,11 @@ def get_info():
         try:
             phone_number = int(input("Введите номер: "))
             if len(str(phone_number)) != 11:
-                raise LenNumberError("Неверная длина номера")
+                raise LenNumberError("Неверная длина номера!")
             else:
                 is_valid_phone = True
         except ValueError:
-            print("Не валидный номер")
+            print("Не валидный номер!")
             continue
         except LenNumberError as err:
             print(err)
@@ -72,7 +72,7 @@ def write_file(file_name, lst):
     res = read_file(file_name)
     for el in res:
         if el["Телефон"] == str(lst[2]):
-            print("Такой телефон уже есть")
+            print("Такой номер уже есть!")
             return
 
     obj = {"Имя": lst[0], "Фамилия": lst[1], "Телефон": lst[2]}
@@ -81,6 +81,23 @@ def write_file(file_name, lst):
         f_writer = DictWriter(data, fieldnames=['Имя', 'Фамилия', 'Телефон'])
         f_writer.writeheader()
         f_writer.writerows(res)
+
+
+def copy_row(file_name, row_number):
+    rows = read_file(file_name)
+    if row_number < 1 or row_number > len(rows):
+        print("Неверный номер строки!")
+        return
+
+    row_to_copy = rows[row_number - 1]
+    new_file_name = "new_file.csv"
+
+    with open(new_file_name, "w", encoding='utf-8', newline='') as new_data:
+        f_writer = DictWriter(new_data, fieldnames=['Имя', 'Фамилия', 'Телефон'])
+        f_writer.writeheader()
+        f_writer.writerow(row_to_copy)
+
+    print(f"Строка {row_number} скопирована в файл new_file.csv!")
 
 
 file_name = 'phone.csv'
@@ -97,8 +114,15 @@ def main():
             write_file(file_name, get_info())
         elif command == 'r':
             if not exists(file_name):
-                print("Файл отсутствует. Создайте его")
+                print("Файл отсутствует. Создайте его!")
                 continue
             print(*read_file(file_name), sep='\n')
+        elif command == 'c':
+            if not exists(file_name):
+                print("Файл отсутствует. Создайте его!")
+                continue
+            row_number = int(input("Введите номер строки для копирования: "))
+            copy_row(file_name, row_number)
+
 
 main()
